@@ -1,0 +1,610 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KELOMPOK 3 • Energi Alternatif & Bioteknologi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@400;500&display=swap');
+        
+        :root { --neon-cyan: #00f7ff; --neon-purple: #c300ff; }
+        
+        * { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .title-font { font-family: 'Orbitron', sans-serif; }
+        
+        .landing-bg { background: radial-gradient(circle at center, #0a0a2a 0%, #000011 70%); overflow: hidden; }
+        .neon-text { text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-purple); }
+        
+        .glow-button { position: relative; box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
+        .glow-button::before {
+            content: ''; position: absolute; inset: -2px;
+            background: linear-gradient(45deg, #00f7ff, #c300ff, #00ff9d);
+            z-index: -1; filter: blur(10px); opacity: 0.8;
+            animation: pulse 2s infinite; border-radius: 9999px;
+        }
+        @keyframes pulse { 0%,100% {opacity:0.6} 50% {opacity:1} }
+        
+        .particle { position: absolute; background: #00f7ff; border-radius: 50%; animation: floatParticle 15s linear infinite; opacity: 0.7; }
+        
+        .nav-link::after { content:''; position:absolute; width:0; height:2px; bottom:-2px; left:0; background:linear-gradient(to right, var(--neon-cyan), var(--neon-purple)); }
+        .nav-link:hover::after, .tab-active::after { width:100%; }
+        .tab-active { color:#00f7ff; }
+        
+        .card-hover:hover { transform: translateY(-8px) scale(1.05); box-shadow: 0 25px 50px -12px rgb(0 247 255); }
+        
+        .section-header::before {
+            content:''; position:absolute; left:-20px; top:50%; width:60px; height:3px;
+            background:linear-gradient(to right, #00f7ff, transparent);
+        }
+        
+        .member-card { border:2px solid #00f7ff; box-shadow:0 0 25px #00f7ff; }
+        
+        .quiz-option { transition:all 0.3s ease; }
+        .quiz-option:hover { transform:scale(1.02); background-color:#112233; }
+        .correct { background-color:#00ff9d !important; color:#000; }
+        .wrong { background-color:#ff0033 !important; color:#fff; }
+        
+        .score-bar { transition: width 1s ease; }
+    </style>
+</head>
+<body class="bg-[#05050f] text-white overflow-x-hidden">
+
+    <!-- LANDING -->
+    <div id="landing" class="landing-bg min-h-screen flex items-center justify-center relative">
+        <div id="particles" class="absolute inset-0 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:80px_80px] opacity-30"></div>
+        
+        <div class="text-center z-10 px-6 max-w-5xl mx-auto">
+            <div class="flex items-center justify-center gap-4 mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-4xl shadow-2xl shadow-cyan-500/50 rotate-12">⚡</div>
+                <h1 class="title-font text-7xl md:text-8xl font-bold tracking-[0.3em] neon-text">KELOMPOK 3</h1>
+            </div>
+            <h2 class="title-font text-5xl md:text-6xl font-bold mb-4 tracking-widest neon-text">FUTURE TECHNOLOGIES</h2>
+            <p class="text-3xl md:text-4xl text-cyan-300 mb-2">Energi Alternatif • Bioteknologi</p>
+            <p class="text-xl md:text-2xl text-cyan-300 mb-12 max-w-lg mx-auto">Membentuk masa depan yang bersih, berkelanjutan, dan lebih baik.</p>
+            
+            <button onclick="startJourney()" class="glow-button px-14 py-6 text-3xl font-medium rounded-3xl border border-cyan-400 hover:border-purple-400 uppercase tracking-[3px] flex items-center gap-4 mx-auto group">
+                <span>MULAI JELAJAHI MASA DEPAN</span>
+                <span class="text-4xl group-active:rotate-45">→</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="hidden">
+        <nav class="bg-[#0a0a2a]/90 backdrop-blur-xl border-b border-cyan-400/30 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">⚡</div>
+                    <h1 class="title-font text-2xl font-bold tracking-widest neon-text">KELOMPOK 3</h1>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest font-medium">
+                    <a onclick="switchTopic(0)" id="tab-0" class="nav-link tab-active">BERANDA</a>
+                    <a onclick="switchTopic(1)" id="tab-1" class="nav-link">ENERGI ALTERNATIF</a>
+                    <a onclick="switchTopic(2)" id="tab-2" class="nav-link">BIOTEKNOLOGI</a>
+                    <a onclick="switchTopic(3)" id="tab-3" class="nav-link">QUIZ</a>
+                    <a onclick="switchTopic(4)" id="tab-4" class="nav-link">KESIMPULAN</a>
+                    <a onclick="backToLanding()" class="nav-link flex items-center gap-1 text-purple-400"><span>KEMBALI KE AWAL</span><span class="text-lg">↩</span></a>
+                </div>
+                
+                <button onclick="toggleMobileMenu()" class="md:hidden text-3xl">☰</button>
+            </div>
+            
+            <div id="mobileMenu" class="hidden md:hidden bg-[#0a0a2a] border-t border-cyan-400/30 px-8 py-6 text-center space-y-6 text-lg">
+                <a onclick="switchTopic(0);toggleMobileMenu()" class="block">BERANDA</a>
+                <a onclick="switchTopic(1);toggleMobileMenu()" class="block">ENERGI ALTERNATIF</a>
+                <a onclick="switchTopic(2);toggleMobileMenu()" class="block">BIOTEKNOLOGI</a>
+                <a onclick="switchTopic(3);toggleMobileMenu()" class="block">QUIZ</a>
+                <a onclick="switchTopic(4);toggleMobileMenu()" class="block">KESIMPULAN</a>
+                <a onclick="backToLanding();toggleMobileMenu()" class="block text-purple-400">← KEMBALI KE LANDING</a>
+            </div>
+        </nav>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-8 py-12">
+            
+            <!-- BERANDA -->
+            <div id="topic-0">
+                <div class="mb-16 text-center">
+                    <div class="inline-flex items-center gap-2 bg-white/10 text-emerald-300 text-sm font-medium px-6 py-2 rounded-3xl mb-6 border border-emerald-400/30">👥 KELOMPOK 3 • 2045</div>
+                    <h2 class="title-font text-6xl font-bold neon-text leading-none mb-4">ANGGOTA KELOMPOK 3</h2>
+                    <p class="text-cyan-200 max-w-xl mx-auto">Tim yang membangun masa depan teknologi berkelanjutan</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="member-card bg-[#0f1f2a] rounded-3xl p-8 text-center card-hover">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-2xl flex items-center justify-center text-4xl shadow-inner">👨‍🚀</div>
+                        <h4 class="text-2xl font-bold title-font">Opik Dwi Budi Saputra</h4>
+                        <p class="text-cyan-300 text-sm mt-1">Ketua Kelompok</p>
+                    </div>
+                    <div class="member-card bg-[#0f1f2a] rounded-3xl p-8 text-center card-hover">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl flex items-center justify-center text-4xl shadow-inner">👩‍🔬</div>
+                        <h4 class="text-2xl font-bold title-font">Natasya Widi Anhar</h4>
+                    </div>
+                    <div class="member-card bg-[#0f1f2a] rounded-3xl p-8 text-center card-hover">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-2xl flex items-center justify-center text-4xl shadow-inner">👨‍💻</div>
+                        <h4 class="text-2xl font-bold title-font">Cristian Sitorus</h4>
+                    </div>
+                    <div class="member-card bg-[#0f1f2a] rounded-3xl p-8 text-center card-hover">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-2xl flex items-center justify-center text-4xl shadow-inner">👨‍🔧</div>
+                        <h4 class="text-2xl font-bold title-font">Muhammad Fairuz Izdihar</h4>
+                    </div>
+                    <div class="member-card bg-[#0f1f2a] rounded-3xl p-8 text-center card-hover">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-pink-400 to-purple-500 rounded-2xl flex items-center justify-center text-4xl shadow-inner">👩‍🌾</div>
+                        <h4 class="text-2xl font-bold title-font">Aqilla Wizanthi Hanif</h4>
+                    </div>
+                    <div class="member-card bg-[#0f1f2a] rounded-3xl p-8 text-center card-hover">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-2xl flex items-center justify-center text-4xl shadow-inner">👩‍🔧</div>
+                        <h4 class="text-2xl font-bold title-font">Noviyanti Nurhafizah</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ENERGI ALTERNATIF -->
+            <div id="topic-1" class="hidden">
+                <div class="mb-16 text-center">
+                    <div class="inline-flex items-center gap-2 bg-white/10 text-cyan-300 text-sm font-medium px-6 py-2 rounded-3xl mb-6 border border-cyan-400/30">🌍 ENERGI BERSIH 2045</div>
+                    <h2 class="title-font text-6xl font-bold neon-text leading-none mb-4">SUMBER ENERGI ALTERNATIF</h2>
+                    <p class="text-cyan-200 max-w-xl mx-auto">Menggantikan bahan bakar fosil dengan energi yang dapat diperbarui dan ramah lingkungan.</p>
+                </div>
+                
+                <!-- PENGERTIAN LENGKAP -->
+                <section class="mb-20">
+                    <h3 class="section-header text-4xl font-bold mb-8 flex items-center gap-4"><span>PENGERTIAN</span><span class="text-3xl">🔬</span></h3>
+                    <div class="bg-[#0f0f2a] border border-cyan-400/20 rounded-3xl p-10 md:p-14 text-lg leading-relaxed">
+                        <p class="mb-6">Sumber energi alternatif adalah segala bentuk energi yang berasal dari sumber alam yang dapat diperbarui dan tidak bergantung pada bahan bakar fosil seperti minyak bumi, batu bara, dan gas alam. Energi fosil ini jumlahnya terbatas dan semakin menipis karena terus dieksploitasi selama ratusan tahun. Selain itu, pembakaran bahan bakar fosil menghasilkan emisi karbon dioksida yang sangat besar, menyebabkan pemanasan global, perubahan iklim, dan pencemaran udara yang membahayakan kesehatan manusia serta ekosistem bumi.</p>
+                        <p class="mb-8">Oleh karena itu, energi alternatif dikembangkan sebagai solusi masa depan yang berkelanjutan. Energi alternatif umumnya memiliki tiga karakteristik utama:</p>
+                        <ul class="grid grid-cols-1 md:grid-cols-3 gap-6 text-base">
+                            <li class="flex items-start gap-3"><span class="text-2xl">♻️</span><div><strong>Dapat diperbarui</strong> – Sumbernya terus tersedia secara alami dan tidak akan habis.</div></li>
+                            <li class="flex items-start gap-3"><span class="text-2xl">🌿</span><div><strong>Ramah lingkungan</strong> – Emisi karbon rendah atau bahkan nol, sehingga tidak memperburuk pemanasan global.</div></li>
+                            <li class="flex items-start gap-3"><span class="text-2xl">🌍</span><div><strong>Mengurangi dampak negatif</strong> – Membantu menjaga keseimbangan ekosistem dan meningkatkan kualitas udara serta air di bumi.</div></li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- JENIS-JENIS -->
+                <section class="mb-20">
+                    <h3 class="section-header text-4xl font-bold mb-8 flex items-center gap-4"><span>JENIS-JENIS SUMBER ENERGI ALTERNATIF</span><span class="text-3xl">🌐</span></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                        <div class="card-hover bg-gradient-to-br from-[#0f1f2a] to-[#112233] border border-cyan-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-yellow-300 to-cyan-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">☀️</span><h4 class="text-3xl font-bold title-font mt-4">Energi Surya</h4></div><span class="px-4 py-1 text-xs bg-yellow-300/20 text-yellow-300 rounded-3xl font-medium">MELIMPAH</span></div>
+                                <p class="text-cyan-100 mb-8">Energi yang berasal dari cahaya dan panas matahari.</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Tidak mencemari</li><li>✅ Melimpah</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Bergantung sinar matahari</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-hover bg-gradient-to-br from-[#0f2a1a] to-[#113322] border border-cyan-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">🌬️</span><h4 class="text-3xl font-bold title-font mt-4">Energi Angin</h4></div><span class="px-4 py-1 text-xs bg-emerald-300/20 text-emerald-300 rounded-3xl font-medium">TERBARUI</span></div>
+                                <p class="text-cyan-100 mb-8">Memanfaatkan hembusan angin untuk menggerakkan turbin.</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Ramah lingkungan</li><li>✅ Dapat diperbarui</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Membutuhkan daerah berangin</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-hover bg-gradient-to-br from-[#1a1f2a] to-[#112244] border border-cyan-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-blue-400 to-cyan-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">💧</span><h4 class="text-3xl font-bold title-font mt-4">Energi Air</h4></div><span class="px-4 py-1 text-xs bg-blue-300/20 text-blue-300 rounded-3xl font-medium">SKALA BESAR</span></div>
+                                <p class="text-cyan-100 mb-8">Energi dari aliran air (PLTA).</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Listrik besar</li><li>✅ Tidak ada polusi udara</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Membutuhkan bendungan</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-hover bg-gradient-to-br from-[#2a1f1a] to-[#331111] border border-cyan-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-orange-400 to-cyan-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">🌋</span><h4 class="text-3xl font-bold title-font mt-4">Energi Panas Bumi</h4></div><span class="px-4 py-1 text-xs bg-orange-300/20 text-orange-300 rounded-3xl font-medium">STABIL</span></div>
+                                <p class="text-cyan-100 mb-8">Energi dari panas di dalam bumi (PLTP).</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Energi stabil</li><li>✅ Ramah lingkungan</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Hanya di daerah tertentu</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-hover bg-gradient-to-br from-[#2a1f2a] to-[#3a2a3a] border border-cyan-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-amber-400 to-cyan-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">🌱</span><h4 class="text-3xl font-bold title-font mt-4">Energi Biomassa</h4></div><span class="px-4 py-1 text-xs bg-amber-300/20 text-amber-300 rounded-3xl font-medium">ORGANIK</span></div>
+                                <p class="text-cyan-100 mb-8">Energi dari bahan organik seperti tumbuhan & limbah.</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Dapat diperbarui</li><li>✅ Mengurangi sampah</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Emisi CO₂ saat dibakar</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- BIOTEKNOLOGI -->
+            <div id="topic-2" class="hidden">
+                <div class="mb-16 text-center">
+                    <div class="inline-flex items-center gap-2 bg-white/10 text-purple-300 text-sm font-medium px-6 py-2 rounded-3xl mb-6 border border-purple-400/30">🧬 BIOTEKNOLOGI 2045</div>
+                    <h2 class="title-font text-6xl font-bold neon-text leading-none mb-4">BIOTEKNOLOGI MODERN</h2>
+                    <p class="text-cyan-200 max-w-xl mx-auto">Pemanfaatan makhluk hidup dan sistem biologis untuk mengatasi masalah global termasuk energi bersih.</p>
+                </div>
+                
+                <!-- PENGERTIAN BIOTEKNOLOGI -->
+                <section class="mb-20">
+                    <h3 class="section-header text-4xl font-bold mb-8 flex items-center gap-4"><span>PENGERTIAN</span><span class="text-3xl">🧬</span></h3>
+                    <div class="bg-[#0f0f2a] border border-purple-400/20 rounded-3xl p-10 md:p-14 text-lg leading-relaxed">
+                        <p class="mb-6">Bioteknologi adalah ilmu yang memanfaatkan makhluk hidup (mikroorganisme, tumbuhan, hewan) atau komponen biologisnya untuk menghasilkan produk atau proses yang bermanfaat bagi manusia. Di era 2045, bioteknologi tidak hanya digunakan di bidang kesehatan dan pertanian, tetapi juga sangat berperan dalam produksi energi bersih melalui rekayasa genetika dan fermentasi mikroba.</p>
+                        <p class="mb-8">Bioteknologi modern memiliki tiga pilar utama:</p>
+                        <ul class="grid grid-cols-1 md:grid-cols-3 gap-6 text-base">
+                            <li class="flex items-start gap-3"><span class="text-2xl">🧪</span><div><strong>Rekayasa Genetika</strong> – Mengubah DNA untuk menciptakan organisme super-efisien.</div></li>
+                            <li class="flex items-start gap-3"><span class="text-2xl">🦠</span><div><strong>Fermentasi Mikroba</strong> – Menggunakan bakteri dan yeast untuk menghasilkan biofuel.</div></li>
+                            <li class="flex items-start gap-3"><span class="text-2xl">🌱</span><div><strong>Bioproses</strong> – Mengubah limbah organik menjadi energi terbarukan.</div></li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- JENIS-JENIS & APLIKASI -->
+                <section class="mb-20">
+                    <h3 class="section-header text-4xl font-bold mb-8 flex items-center gap-4"><span>APLIKASI BIOTEKNOLOGI DALAM ENERGI</span><span class="text-3xl">🌍</span></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                        <div class="card-hover bg-gradient-to-br from-[#1f0f2a] to-[#221133] border border-purple-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-purple-400 to-pink-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">🧪</span><h4 class="text-3xl font-bold title-font mt-4">Biofuel Generasi Kedua</h4></div><span class="px-4 py-1 text-xs bg-purple-300/20 text-purple-300 rounded-3xl font-medium">TERBARUI</span></div>
+                                <p class="text-cyan-100 mb-8">Bahan bakar dari limbah pertanian & alga yang dimodifikasi secara genetik.</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Nol emisi bersih</li><li>✅ Tidak bersaing dengan pangan</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Biaya produksi tinggi</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-hover bg-gradient-to-br from-[#0f2a1a] to-[#113322] border border-purple-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-emerald-400 to-purple-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">🦠</span><h4 class="text-3xl font-bold title-font mt-4">Mikroalga Biofuel</h4></div><span class="px-4 py-1 text-xs bg-emerald-300/20 text-emerald-300 rounded-3xl font-medium">EFISIEN</span></div>
+                                <p class="text-cyan-100 mb-8">Alga yang dimodifikasi menghasilkan minyak dalam jumlah besar melalui fotosintesis.</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Produksi cepat</li><li>✅ Menyerap CO₂</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Butuh lahan & air</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-hover bg-gradient-to-br from-[#2a1f2a] to-[#3a2a3a] border border-purple-400/30 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-amber-400 to-purple-400"></div>
+                            <div class="p-8">
+                                <div class="flex justify-between items-start mb-6"><div><span class="text-5xl">🌾</span><h4 class="text-3xl font-bold title-font mt-4">Selulosa Biofuel</h4></div><span class="px-4 py-1 text-xs bg-amber-300/20 text-amber-300 rounded-3xl font-medium">RAMAH LINGKUNGAN</span></div>
+                                <p class="text-cyan-100 mb-8">Mengubah limbah tanaman menjadi etanol melalui enzim rekayasa genetika.</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><span class="text-emerald-300">Kelebihan</span><ul class="mt-2 space-y-1 text-xs"><li>✅ Menggunakan limbah</li><li>✅ Ramah lingkungan</li></ul></div>
+                                    <div><span class="text-red-300">Kekurangan</span><ul class="mt-2 space-y-1 text-xs"><li>⚠️ Proses rumit</li></ul></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- QUIZ -->
+            <div id="topic-3" class="hidden">
+                <div class="mb-16 text-center">
+                    <div class="inline-flex items-center gap-2 bg-white/10 text-amber-300 text-sm font-medium px-6 py-2 rounded-3xl mb-6 border border-amber-400/30">🧠 UJI PENGETAHUANMU</div>
+                    <h2 class="title-font text-6xl font-bold neon-text leading-none mb-4">QUIZ ENERGI & BIOTEKNOLOGI</h2>
+                    <p class="text-cyan-200 max-w-xl mx-auto">Seberapa siap kamu menghadapi masa depan 2045?</p>
+                </div>
+                
+                <div id="quiz-container" class="max-w-3xl mx-auto">
+                    <!-- Quiz questions will be injected by JS -->
+                    <div id="quiz-content"></div>
+                    
+                    <div id="quiz-result" class="hidden text-center mt-12">
+                        <h3 class="text-4xl font-bold mb-4">Skor Kamu</h3>
+                        <div class="text-8xl font-bold title-font text-cyan-300 mb-6" id="score-display">0/10</div>
+                        <div class="w-full bg-white/10 rounded-3xl h-6 mb-8 overflow-hidden">
+                            <div id="score-bar" class="score-bar h-6 bg-gradient-to-r from-cyan-400 to-purple-400 w-0 rounded-3xl"></div>
+                        </div>
+                        <button onclick="restartQuiz()" class="px-10 py-4 rounded-3xl border border-cyan-400 hover:bg-cyan-400 hover:text-black font-medium text-lg">ULANGI QUIZ</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- KESIMPULAN -->
+            <div id="topic-4" class="hidden">
+                <div class="max-w-4xl mx-auto text-center">
+                    <div class="inline-flex items-center gap-2 bg-white/10 text-emerald-300 text-sm font-medium px-6 py-2 rounded-3xl mb-6 border border-emerald-400/30">🌟 2045 DAN SETERUSNYA</div>
+                    <h2 class="title-font text-6xl font-bold neon-text leading-none mb-8">KESIMPULAN</h2>
+                    <div class="bg-gradient-to-br from-[#0f1f2a] to-[#112233] border border-cyan-400/30 rounded-3xl p-12 md:p-16 text-left max-w-3xl mx-auto">
+                        <p class="text-2xl leading-relaxed mb-8 text-cyan-100">Energi alternatif dan bioteknologi adalah dua pilar utama yang akan membawa dunia menuju masa depan yang bersih dan berkelanjutan. Dengan menggabungkan kekuatan matahari, angin, air, dan rekayasa genetika mikroba, kita dapat mengakhiri ketergantungan pada bahan bakar fosil dan menciptakan energi yang tak terbatas sekaligus ramah lingkungan.</p>
+                        <p class="text-2xl leading-relaxed mb-12 text-cyan-100">Kelompok 3 percaya bahwa pada tahun 2045, teknologi ini bukan lagi mimpi, melainkan realitas yang harus kita wujudkan bersama. Mari kita dukung inovasi, lindungi bumi, dan bangun masa depan yang lebih hijau untuk generasi mendatang.</p>
+                        
+                        <div class="flex justify-center gap-8 text-5xl">
+                            <div>⚡</div>
+                            <div>🌍</div>
+                            <div>🧬</div>
+                            <div>♻️</div>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-12 text-cyan-300 text-lg">Terima kasih telah menjelajahi website ini!<br>Kelompok 3 – Siap membangun masa depan.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind script sudah di-load di head
+        
+        // Particles generator
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 80; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                const delay = Math.random() * -20;
+                particle.style.animationDelay = `${delay}s`;
+                
+                // Random neon color
+                const colors = ['#00f7ff', '#c300ff', '#00ff9d'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(particle);
+                
+                // Remove particle after animation ends
+                setTimeout(() => {
+                    if (particle.parentNode) particle.parentNode.removeChild(particle);
+                }, duration * 1000);
+            }
+        }
+        
+        // Show main content from landing
+        function startJourney() {
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            switchTopic(0);
+            createParticles(); // extra particles if needed
+        }
+        
+        // Back to landing
+        function backToLanding() {
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('landing').classList.remove('hidden');
+        }
+        
+        // Tab switching
+        let currentTopic = 0;
+        function switchTopic(n) {
+            // Hide all topics
+            for (let i = 0; i < 5; i++) {
+                const topic = document.getElementById(`topic-${i}`);
+                if (topic) topic.classList.add('hidden');
+            }
+            
+            // Show selected
+            const selected = document.getElementById(`topic-${n}`);
+            if (selected) selected.classList.remove('hidden');
+            
+            // Update active tab
+            currentTopic = n;
+            for (let i = 0; i < 5; i++) {
+                const tab = document.getElementById(`tab-${i}`);
+                if (tab) {
+                    if (i === n) {
+                        tab.classList.add('tab-active');
+                    } else {
+                        tab.classList.remove('tab-active');
+                    }
+                }
+            }
+            
+            // Reset quiz if switching to quiz
+            if (n === 3) {
+                setTimeout(initQuiz, 100);
+            }
+        }
+        
+        // Mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Quiz data
+        const quizData = [
+            {
+                question: "Apa yang dimaksud dengan energi alternatif?",
+                options: [
+                    "Energi yang berasal dari bahan bakar fosil",
+                    "Energi yang dapat diperbarui dan ramah lingkungan",
+                    "Energi nuklir saja",
+                    "Energi listrik dari PLTU"
+                ],
+                correct: 1
+            },
+            {
+                question: "Manakah yang merupakan kelebihan energi surya?",
+                options: [
+                    "Bergantung pada cuaca buruk",
+                    "Tidak mencemari lingkungan dan melimpah",
+                    "Hanya bisa digunakan di malam hari",
+                    "Mahal dan sulit didapat"
+                ],
+                correct: 1
+            },
+            {
+                question: "Apa peran bioteknologi dalam energi bersih?",
+                options: [
+                    "Hanya untuk obat-obatan",
+                    "Membuat biofuel dari alga dan limbah",
+                    "Menghasilkan batu bara sintetis",
+                    "Tidak ada hubungannya"
+                ],
+                correct: 1
+            },
+            {
+                question: "Energi panas bumi disebut juga...",
+                options: [
+                    "PLTA",
+                    "PLTP",
+                    "PLTS",
+                    "PLTB"
+                ],
+                correct: 1
+            },
+            {
+                question: "Salah satu kekurangan energi angin adalah...",
+                options: [
+                    "Tidak ramah lingkungan",
+                    "Membutuhkan daerah yang berangin kencang",
+                    "Menghasilkan emisi CO₂ tinggi",
+                    "Tidak dapat diperbarui"
+                ],
+                correct: 1
+            },
+            {
+                question: "Apa yang dimaksud dengan biofuel generasi kedua?",
+                options: [
+                    "Biofuel dari jagung",
+                    "Biofuel dari limbah pertanian dan alga",
+                    "Biofuel dari minyak bumi",
+                    "Biofuel dari kayu bakar"
+                ],
+                correct: 1
+            }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswers = [];
+        
+        function initQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            selectedAnswers = [];
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-content').innerHTML = '';
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            const container = document.getElementById('quiz-content');
+            const q = quizData[currentQuestion];
+            
+            let html = `
+                <div class="bg-[#0f0f2a] border border-cyan-400/30 rounded-3xl p-8 mb-8">
+                    <div class="flex justify-between text-sm mb-4">
+                        <span class="text-cyan-300">Pertanyaan ${currentQuestion + 1} dari ${quizData.length}</span>
+                        <span class="text-purple-300">Skor: \( {score}/ \){currentQuestion}</span>
+                    </div>
+                    <h3 class="text-2xl font-medium mb-8">${q.question}</h3>
+                    
+                    <div class="space-y-3" id="options">
+            `;
+            
+            q.options.forEach((option, index) => {
+                html += `
+                    <div onclick="selectAnswer(${index})" class="quiz-option bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-5 cursor-pointer text-lg">
+                        ${option}
+                    </div>
+                `;
+            });
+            
+            html += `</div></div>`;
+            
+            // Navigation buttons
+            html += `
+                <div class="flex justify-between items-center">
+                    <button onclick="prevQuestion()" class="px-8 py-4 rounded-3xl border border-white/30 ${currentQuestion === 0 ? 'opacity-30 cursor-not-allowed' : ''}">← Sebelumnya</button>
+                    <button onclick="nextQuestion()" id="next-btn" class="px-8 py-4 rounded-3xl bg-gradient-to-r from-cyan-400 to-purple-400 text-black font-medium">Berikutnya →</button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function selectAnswer(index) {
+            // Remove previous selection
+            const options = document.querySelectorAll('#options > div');
+            options.forEach(opt => opt.classList.remove('border-cyan-400', 'bg-cyan-400/10'));
+            
+            // Mark selected
+            options[index].classList.add('border-cyan-400', 'bg-cyan-400/10');
+            
+            selectedAnswers[currentQuestion] = index;
+        }
+        
+        function nextQuestion() {
+            // If no answer selected, allow to continue
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                // Finish quiz
+                finishQuiz();
+            }
+        }
+        
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+        
+        function finishQuiz() {
+            // Calculate score
+            score = 0;
+            quizData.forEach((q, i) => {
+                if (selectedAnswers[i] === q.correct) score++;
+            });
+            
+            // Show result
+            const container = document.getElementById('quiz-content');
+            container.innerHTML = '';
+            
+            const result = document.getElementById('quiz-result');
+            result.classList.remove('hidden');
+            
+            document.getElementById('score-display').textContent = `\( {score}/ \){quizData.length}`;
+            
+            const percentage = Math.round((score / quizData.length) * 100);
+            document.getElementById('score-bar').style.width = `${percentage}%`;
+            
+            // Add motivational message
+            if (score >= 5) {
+                result.insertAdjacentHTML('afterbegin', `<p class="text-emerald-300 text-xl mb-4">🎉 Hebat! Kamu siap untuk masa depan berkelanjutan!</p>`);
+            } else {
+                result.insertAdjacentHTML('afterbegin', `<p class="text-amber-300 text-xl mb-4">💡 Masih ada yang perlu dipelajari. Coba lagi!</p>`);
+            }
+        }
+        
+        function restartQuiz() {
+            initQuiz();
+        }
+        
+        // Initialize everything
+        window.onload = function() {
+            // Create initial particles on landing
+            createParticles();
+            
+            // Console message (for fun)
+            console.log('%c✅ Website Kelompok 3 sudah diperbaiki dan siap digunakan!', 'color:#00f7ff; font-size:18px; font-family:Orbitron');
+        };
+    </script>
+</body>
+</html>
